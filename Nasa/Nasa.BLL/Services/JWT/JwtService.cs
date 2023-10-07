@@ -1,36 +1,36 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using Nasa.Common.DTO;
-using System;
+using Nasa.BLL.ServicesContracts;
+using Nasa.Common.DTO.User;
+using Nasa.DAL.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Nasa.BLL.JWT
+namespace Nasa.BLL.Services.JWT
 {
-    public class JwtService
+    public class JwtService : IJwtService
     {
         private readonly IConfiguration _configuration;
-        private readonly UserManager<ApplicationUserDTO> _userManager;
+        private readonly IMapper _mapper;
 
-        public JwtService(IConfiguration configuration, UserManager<ApplicationUserDTO> userManager)
+        public JwtService(IConfiguration configuration, IMapper mapper)
         {
             _configuration = configuration;
-            _userManager = userManager;
+            _mapper = mapper;
         }
 
-        public async Task<AuthorizationResponse> GetJwt(ApplicationUser user)
+        public async Task<AuthorizationResponse> GetJwt(User user)
         {
             var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:Expiration_minutes"]));
 
-            string role = string.Join(',', (await _userManager.GetRolesAsync(user)));
-
             Claim[] claims = new Claim[]
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.id.ToString()),
-                new Claim(JwtRegisteredClaimNames.UniqueName, user.userName),
-                new Claim(JwtRegisteredClaimNames.Email, user.email),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email)
             };
 
             SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -47,9 +47,14 @@ namespace Nasa.BLL.JWT
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             string token = handler.WriteToken(tokenGenerator);
 
-            Guid userId = user.UserId is null ? user.Id : user.UserId.Value;
+            var result = _mapper.Map<AuthorizationResponse>(user);
 
-            return new AuthorizationResponse { UserId = userId, Role = role, Email = user.Email, Expiration = expiration, Token = token };
+            result.TokenDto = new TokenDto
+            {
+                Token = token,
+            };
+
+            return result;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Nasa.BLL.Services.Abstract;
+﻿using AutoMapper;
+using Nasa.BLL.Services.Abstract;
+using Nasa.BLL.ServicesContracts;
 using Nasa.Common.DTO;
 using Nasa.Common.DTO.User;
 using Nasa.Common.Security;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Nasa.BLL.Services
 {
-    public class UserService : BaseService
+    public class UserService : BaseService, IUserService
     {
         public UserService(NasaContext context, IMapper mapper) : base(context, mapper)
         {
@@ -24,8 +26,7 @@ namespace Nasa.BLL.Services
             var salt = SecurityHelper.GetRandomBytes();
 
             userEntity.Salt = Convert.ToBase64String(salt);
-            userEntity.Password = SecurityHelper.HashPassword(userDto.Password, salt);
-            userEntity.AvatarId = null;
+            userEntity.PasswordHash = SecurityHelper.HashPassword(userDto.Password, salt);
 
             _context.Users.Add(userEntity);
             await _context.SaveChangesAsync();

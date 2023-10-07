@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Nasa.Common.DTO.User
 {
-    public class UserDto
+    public class LoginUserDto
     {
-        public string? Email { get; set; } = string.Empty;
-        public string? Coordinats { get; set; } = string.Empty;
+        public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
     }
 }
