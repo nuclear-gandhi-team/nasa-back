@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nasa.DAL.Context;
 
@@ -10,9 +11,10 @@ using Nasa.DAL.Context;
 namespace Nasa.DAL.Migrations
 {
     [DbContext(typeof(NasaContext))]
-    partial class NasaContextModelSnapshot : ModelSnapshot
+    [Migration("20231007194343_RemoveRoles")]
+    partial class RemoveRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

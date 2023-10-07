@@ -9,8 +9,7 @@ public class NasaContext: DbContext
     {
     }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Settlement> Settlements => Set<Settlement>();
-    public DbSet<Subscription> Subscriptions => Set<Subscription>();
-    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<User> Users { get; set; }
+    public DbSet<Settlement> Settlements { get; set; }
+    public DbSet<Subscription> Subscriptions { get; set; }
 }

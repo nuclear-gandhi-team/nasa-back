@@ -1,14 +1,15 @@
 ﻿using Nasa.API.Extensions;
+using Nasa.BLL;
 using Nasa.BLL.Services;
 using Nasa.BLL.Services.JWT;
 using Nasa.BLL.ServicesContracts;
+using Nasa.Common.Auth;
 using System.Reflection;
 
 namespace Nasa.API;
 
 public class Startup
 {
-    public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
     private readonly IConfiguration _configuration;
 
     public Startup(IConfiguration configuration)
@@ -19,16 +20,17 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddNasaContext(_configuration);
-        
-        
+        services.ConfigureJwt(_configuration);
+        services.AddMapper();
+
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
         services.AddControllers();
-        services.AddAutoMapper(Assembly);
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<JwtIssuerOptions>();
     }
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

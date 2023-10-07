@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Nasa.BLL.ServicesContracts;
+using Nasa.Common.Auth;
 using Nasa.Common.DTO.User;
 using Nasa.DAL.Entities;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,17 +17,17 @@ namespace Nasa.BLL.Services.JWT
     {
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+        private readonly JwtIssuerOptions _jwtOptions;
 
-        public JwtService(IConfiguration configuration, IMapper mapper)
+        public JwtService(IConfiguration configuration, IMapper mapper, IOptions<JwtIssuerOptions> jwtOptions)
         {
             _configuration = configuration;
             _mapper = mapper;
+            _jwtOptions = jwtOptions.Value;
         }
 
         public async Task<AuthorizationResponse> GetJwt(User user)
         {
-            var expiration = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:Expiration_minutes"]));
-
             Claim[] claims = new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
@@ -33,19 +35,16 @@ namespace Nasa.BLL.Services.JWT
                 new Claim(JwtRegisteredClaimNames.Email, user.Email)
             };
 
-            SymmetricSecurityKey securityKey = new(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-
-            SigningCredentials credentials = new(securityKey, SecurityAlgorithms.HmacSha256);
-
-            JwtSecurityToken tokenGenerator = new(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
+            var jwt = new JwtSecurityToken(
+                _jwtOptions.Issuer,
+                _jwtOptions.Audience,
                 claims,
-                expires: expiration,
-                signingCredentials: credentials);
+                _jwtOptions.NotBefore,
+                _jwtOptions.Expiration,
+                _jwtOptions.SigningCredentials);
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
-            string token = handler.WriteToken(tokenGenerator);
+            string token = handler.WriteToken(jwt);
 
             var result = _mapper.Map<AuthorizationResponse>(user);
 
