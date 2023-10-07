@@ -1,9 +1,14 @@
 ﻿using Nasa.API.Extensions;
+using Nasa.BLL.Services;
+using Nasa.BLL.Services.JWT;
+using Nasa.BLL.ServicesContracts;
+using System.Reflection;
 
 namespace Nasa.API;
 
 public class Startup
 {
+    public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
     private readonly IConfiguration _configuration;
 
     public Startup(IConfiguration configuration)
@@ -20,6 +25,10 @@ public class Startup
         services.AddSwaggerGen();
 
         services.AddControllers();
+        services.AddAutoMapper(Assembly);
+        services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
     }
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
