@@ -1,4 +1,6 @@
-﻿namespace Nasa.API;
+﻿using Nasa.API.Extensions;
+
+namespace Nasa.API;
 
 public class Startup
 {
@@ -11,6 +13,9 @@ public class Startup
     
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddNasaContext(_configuration);
+        
+        
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
