@@ -1,6 +1,8 @@
 ﻿using Nasa.BLL.Services.Abstract;
 using Nasa.Common.DTO;
+using Nasa.Common.DTO.User;
 using Nasa.Common.Security;
+using Nasa.DAL.Context;
 using Nasa.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,13 +14,13 @@ namespace Nasa.BLL.Services
 {
     public class UserService : BaseService
     {
-        public UserService(MoodiverseDbContext context, IMapper mapper) : base(context, mapper)
+        public UserService(NasaContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
-        public async Task<UserDTO> CreateUser(RegisterUserDTO userDto)
+        public async Task<UserDto> CreateUser(RegisterUserDto userDto)
         {
-            var userEntity = _mapper.Map<ApplicationUser>(userDto);
+            var userEntity = _mapper.Map<User>(userDto);
             var salt = SecurityHelper.GetRandomBytes();
 
             userEntity.Salt = Convert.ToBase64String(salt);
@@ -28,7 +30,7 @@ namespace Nasa.BLL.Services
             _context.Users.Add(userEntity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<UserDTO>(userEntity);
+            return _mapper.Map<UserDto>(userEntity);
         }
     }
 }

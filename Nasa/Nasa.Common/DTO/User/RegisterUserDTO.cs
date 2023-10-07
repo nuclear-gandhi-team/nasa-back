@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nasa.Common.DTO
 {
-    public class RegisterUserDTO
+    public class RegisterUserDto
     {
             public string Username { get; set; } = null!;
             public string Email { get; set; } = null!;

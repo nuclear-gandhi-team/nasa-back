@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Nasa.Common.DTO.User
 {
-    public class AuthorizationResponse
+    public class TokenDto
     {
-        public UserDto UserDto { get; set; } = null!;
-        public TokenDto TokenDto { get; set;} = null!;
+        public string? Token { get; set; } = string.Empty;
     }
 }
