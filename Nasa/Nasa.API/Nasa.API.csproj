@@ -22,4 +22,8 @@
       <ProjectReference Include="..\Nasa.DAL\Nasa.DAL.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Properties\launchSettings.json" />
+    </ItemGroup>
+
 </Project>
