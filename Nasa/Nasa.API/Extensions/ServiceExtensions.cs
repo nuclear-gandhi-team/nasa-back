@@ -8,6 +8,7 @@ using Nasa.BLL.Services;
 using Nasa.BLL.Services.JWT;
 using Nasa.BLL.ServicesContracts;
 using Nasa.BLL.Services.CurrentFires;
+using Nasa.BLL.Services.HostedServices;
 
 namespace Nasa.API.Extensions;
 
@@ -26,6 +27,7 @@ public static class ServiceExtensions
         services.AddTransient<IUserIdSetter>(s => s.GetRequiredService<UserStorageService>());
 
         services.AddScoped<ISubscribeService, SubscribeService>();
+        services.AddHostedService<NotificateUsersHostedService>();
     }
     public static void AddNasaContext(this IServiceCollection services, IConfiguration configuration)
     {

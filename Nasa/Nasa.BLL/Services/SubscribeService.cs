@@ -21,11 +21,16 @@ public class SubscribeService : BaseService, ISubscribeService
         _userService = userService;
     }
 
-    public async Task<List<SubscribeDto>> GetAllSubscription()
+    public async Task<List<SubscribeDto>> GetAllUserSubscription()
     {
         return _mapper.Map<List<SubscribeDto>>(await _context.Subscriptions
             .Where(s => s.Id == _userIdGetter.GetCurrentUserId())
             .ToListAsync());
+    }
+
+    public async Task<List<SubscribeDto>> GetAllSubscriptions()
+    {
+        return _mapper.Map<List<SubscribeDto>>(await _context.Subscriptions.Include(s => s.User).ToListAsync());
     }
 
     public async Task SubscribeAsync(SubscribeDto subscribeDto)

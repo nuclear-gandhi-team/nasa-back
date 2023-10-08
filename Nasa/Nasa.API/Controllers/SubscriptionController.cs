@@ -20,7 +20,7 @@ public class SubscriptionController: ControllerBase
     [HttpGet("all")]
     public async Task<ActionResult<List<SubscribeDto>>> GetAllSubscriptions()
     {
-        return Ok(await _subscribeService.GetAllSubscription());
+        return Ok(await _subscribeService.GetAllUserSubscription());
     }
 
     [HttpPost]

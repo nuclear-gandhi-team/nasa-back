@@ -8,6 +8,8 @@ public class SubscribeProfile: Profile
 {
     public SubscribeProfile()
     {
-        CreateMap<Subscription, SubscribeDto>().ReverseMap();
+        CreateMap<Subscription, SubscribeDto>()
+            .ForMember(s => s.UserEmail, s => s.MapFrom(x => x.User.Email ))
+            .ReverseMap();
     }
 }

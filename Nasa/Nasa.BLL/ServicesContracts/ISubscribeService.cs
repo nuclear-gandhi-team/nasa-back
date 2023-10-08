@@ -5,7 +5,8 @@ namespace Nasa.BLL.ServicesContracts;
 
 public interface ISubscribeService
 {
-    Task<List<SubscribeDto>> GetAllSubscription();
+    Task<List<SubscribeDto>> GetAllUserSubscription();
     Task SubscribeAsync(SubscribeDto subscribeDto);
     Task UnsubscribeAsync(SubscribeDto subscribeDto);
+    Task<List<SubscribeDto>> GetAllSubscriptions();
 }
