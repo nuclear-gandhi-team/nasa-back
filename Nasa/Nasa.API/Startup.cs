@@ -1,4 +1,5 @@
 ﻿using Nasa.API.Extensions;
+using Nasa.API.Filter;
 using Nasa.API.Middlewares;
 using Nasa.BLL;
 
@@ -22,7 +23,10 @@ public class Startup
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-        services.AddControllers();
+        services.AddControllers(o =>
+        {
+            o.Filters.Add(typeof(CustomExceptionFilter));
+        });
         services.AddCustomServices();
     }
     

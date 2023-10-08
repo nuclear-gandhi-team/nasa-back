@@ -12,7 +12,7 @@ namespace Nasa.BLL.ServicesContracts
     public interface IUserService
     {
         Task<UserDto> CreateUserAsync(RegisterUserDto userDto);
-
         Task<User> GetUserByIdAsync(int userId);
+        Task<User?> GetUserByEmailAsync(string email);
     }
 }
