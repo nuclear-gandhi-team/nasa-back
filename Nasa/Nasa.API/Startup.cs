@@ -2,6 +2,9 @@
 using Nasa.API.Filter;
 using Nasa.API.Middlewares;
 using Nasa.BLL;
+using Nasa.BLL.Services;
+using Nasa.BLL.ServicesContracts;
+using Nasa.Common.DTO.Mail;
 
 namespace Nasa.API;
 
@@ -28,6 +31,9 @@ public class Startup
             o.Filters.Add(typeof(CustomExceptionFilter));
         });
         services.AddCustomServices();
+        
+        services.Configure<MailSettings>(_configuration.GetSection("MailSettings"));
+        services.AddTransient<IMailService, MailService>();
     }
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
