@@ -1,16 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Nasa.BLL.Services.Prediction;
 using Nasa.BLL.ServicesContracts;
 using Nasa.Common.DTO.Mail;
-using Nasa.DAL.Entities;
 
 
 namespace Nasa.BLL.Services.HostedServices
 {
     public class NotificateUsersHostedService : IHostedService, IDisposable
     {
-        private Timer? _timer = null;        
+        private Timer? _timer = null;
         private readonly IServiceProvider _serviceProvider;
         private const double MAX_DISTANCE = 2;
 
@@ -22,7 +22,7 @@ namespace Nasa.BLL.Services.HostedServices
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _timer = new Timer(NotificateUsersAboutCurrentFires, null, TimeSpan.Zero,
-            TimeSpan.FromSeconds(60));
+                TimeSpan.FromSeconds(600));
 
             return Task.CompletedTask;
         }
@@ -36,27 +36,32 @@ namespace Nasa.BLL.Services.HostedServices
             var subscribeService = scope.ServiceProvider.GetService<ISubscribeService>()!;
             var coordinatesService = scope.ServiceProvider.GetService<ICoordinatesService>()!;
             var logger = scope.ServiceProvider.GetService<ILogger<NotificateUsersHostedService>>()!;
+            var predictionService = scope.ServiceProvider.GetService<PredictionService>()!;
 
             var subscriptions = await subscribeService.GetAllSubscriptions();
             var fires = await currentFiresService.GetCurrentFires(DateTime.Now, 1);
 
-            foreach (var subscription in subscriptions)
+            try
             {
-                foreach (var fire in fires)
+                foreach (var subscription in subscriptions)
                 {
-                    try
+                    var coor = coordinatesService.GetCoordinatesInstance(subscription.Coordinates);
+                    foreach (var fire in fires)
                     {
-                        if (coordinatesService.ComputeDistance(fire, coordinatesService.GetCoordinatesInstance(subscription.Coordinates)) < MAX_DISTANCE)
+                        if (coordinatesService.ComputeDistance(fire, coor) < MAX_DISTANCE)
                         {
-                            await mailService.SendMailAsync(new MailRequest { ToEmail = subscription.UserEmail, Subject = "Fire near you!" });
+                            await mailService.SendMailAsync(new MailRequest
+                                { ToEmail = subscription.UserEmail, Subject = "Fire near you!" });
                         }
                     }
-                    catch(ArgumentException ex)
-                    {
-                        logger.LogError(ex.Message);
-                    }   
                 }
             }
+            catch (ArgumentException ex)
+            {
+                logger.LogError(ex.Message);
+            }
+
+            predictionService.Predict(fires);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

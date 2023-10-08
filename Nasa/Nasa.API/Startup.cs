@@ -39,9 +39,9 @@ public class Startup
         app.UseSwaggerUI();
 
         app.UseCors(builder => builder
+            .AllowAnyOrigin()
             .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials());
+            .AllowAnyHeader());
 
         app.UseRouting();
         app.UseHttpsRedirection();
