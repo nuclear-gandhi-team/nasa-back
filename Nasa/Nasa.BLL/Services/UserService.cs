@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Nasa.BLL.Exceptions;
 using Nasa.BLL.Services.Abstract;
 using Nasa.BLL.ServicesContracts;
 using Nasa.Common.DTO;
@@ -18,6 +19,10 @@ namespace Nasa.BLL.Services
 
         public async Task<UserDto> CreateUserAsync(RegisterUserDto userDto)
         {
+            if (await GetUserByEmailAsync(userDto.Email) is not null)
+            {
+                throw new EmailAlreadyExistException();
+            }
             var userEntity = _mapper.Map<User>(userDto);
             var salt = SecurityHelper.GetRandomBytes();
 
@@ -35,11 +40,15 @@ namespace Nasa.BLL.Services
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
             if (user is null)
             {
-                // TODO: add custom not found exception 
-                throw new Exception("not found");
+                throw new NotFoundException(nameof(User));
             }
 
             return user;
+        }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

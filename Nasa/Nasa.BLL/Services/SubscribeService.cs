@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Nasa.BLL.Exceptions;
 using Nasa.BLL.Services.Abstract;
 using Nasa.BLL.ServicesContracts;
 using Nasa.Common.DTO.Subscribe;
@@ -44,8 +45,7 @@ public class SubscribeService : BaseService, ISubscribeService
 
         if (subscribe is null)
         {
-            // TODO: add custom not found exception
-            throw new Exception("not found subscription");
+            throw new NotFoundException(nameof(Subscription));
         }
 
         _context.Remove(subscribe);
