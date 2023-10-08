@@ -10,5 +10,5 @@ public class User: BaseEntity<int>
     public string PasswordHash { get; set; } = null!;
     public string Salt { get; set; } = null!;
     public bool IsGoogleAuth { get; set; }
-    public string Сoordinates { get; set; } = string.Empty;
+    public string? Сoordinates { get; set; } = string.Empty;
 }
