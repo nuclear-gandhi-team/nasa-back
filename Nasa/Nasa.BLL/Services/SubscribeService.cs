@@ -20,6 +20,13 @@ public class SubscribeService : BaseService, ISubscribeService
         _userService = userService;
     }
 
+    public async Task<List<SubscribeDto>> GetAllSubscription()
+    {
+        return _mapper.Map<List<SubscribeDto>>(await _context.Subscriptions
+            .Where(s => s.Id == _userIdGetter.GetCurrentUserId())
+            .ToListAsync());
+    }
+
     public async Task SubscribeAsync(SubscribeDto subscribeDto)
     {
         var subscribe = _mapper.Map<Subscription>(subscribeDto);

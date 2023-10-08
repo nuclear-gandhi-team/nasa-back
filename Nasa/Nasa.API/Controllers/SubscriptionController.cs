@@ -17,6 +17,12 @@ public class SubscriptionController: ControllerBase
         _subscribeService = subscribeService;
     }
 
+    [HttpGet("all")]
+    public async Task<ActionResult<List<SubscribeDto>>> GetAllSubscriptions()
+    {
+        return Ok(await _subscribeService.GetAllSubscription());
+    }
+
     [HttpPost]
     public async Task<ActionResult> Subscribe(SubscribeDto subscribeDto)
     {
