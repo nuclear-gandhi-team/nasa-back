@@ -7,7 +7,6 @@ using System.Text;
 using Nasa.BLL.Services;
 using Nasa.BLL.Services.JWT;
 using Nasa.BLL.ServicesContracts;
-
 namespace Nasa.API.Extensions;
 
 public static class ServiceExtensions
