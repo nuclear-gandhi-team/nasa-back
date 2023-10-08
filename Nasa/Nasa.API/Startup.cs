@@ -1,9 +1,6 @@
 ﻿using Nasa.API.Extensions;
+using Nasa.API.Middlewares;
 using Nasa.BLL;
-using Nasa.BLL.Services;
-using Nasa.BLL.Services.JWT;
-using Nasa.BLL.ServicesContracts;
-using Nasa.Common.Auth;
 
 namespace Nasa.API;
 
@@ -26,10 +23,7 @@ public class Startup
         services.AddSwaggerGen();
 
         services.AddControllers();
-        services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<JwtIssuerOptions>();
+        services.AddCustomServices();
     }
     
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -50,6 +44,8 @@ public class Startup
         
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseMiddleware<CurrentUserMiddleware>();
 
         app.UseEndpoints(cfg =>
         {

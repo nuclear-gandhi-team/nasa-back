@@ -8,7 +8,5 @@ public class Subscription: BaseEntity<int>
 
     public User User { get; set; } = null!;
 
-    public int SettlementId { get; set; }
-
-    public Settlement Settlement { get; set; } = null!;
+    public string Coordinates { get; set; } = string.Empty;
 }
