@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Nasa.BLL.Services;
 using Nasa.BLL.ServicesContracts;
 using Nasa.Common.DTO;
 using Nasa.Common.DTO.User;
-using Nasa.DAL.Entities;
 
 namespace Nasa.API.Controllers
 {
@@ -30,7 +26,7 @@ namespace Nasa.API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AuthorizationResponse>> RegisterUser(RegisterUserDto userDto)
         {
-            await _userService.CreateUser(userDto);
+            await _userService.CreateUserAsync(userDto);
 
             var login = _mapper.Map<LoginUserDto>(userDto);
 

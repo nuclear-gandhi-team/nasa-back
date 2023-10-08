@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Nasa.BLL.Services.Abstract;
 using Nasa.BLL.ServicesContracts;
 using Nasa.Common.DTO;
@@ -6,11 +7,6 @@ using Nasa.Common.DTO.User;
 using Nasa.Common.Security;
 using Nasa.DAL.Context;
 using Nasa.DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nasa.BLL.Services
 {
@@ -20,7 +16,7 @@ namespace Nasa.BLL.Services
         {
         }
 
-        public async Task<UserDto> CreateUser(RegisterUserDto userDto)
+        public async Task<UserDto> CreateUserAsync(RegisterUserDto userDto)
         {
             var userEntity = _mapper.Map<User>(userDto);
             var salt = SecurityHelper.GetRandomBytes();
@@ -32,6 +28,18 @@ namespace Nasa.BLL.Services
             await _context.SaveChangesAsync();
 
             return _mapper.Map<UserDto>(userEntity);
+        }
+
+        public async Task<User> GetUserByIdAsync(int userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user is null)
+            {
+                // TODO: add custom not found exception 
+                throw new Exception("not found");
+            }
+
+            return user;
         }
     }
 }

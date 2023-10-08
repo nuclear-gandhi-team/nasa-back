@@ -4,11 +4,27 @@ using Microsoft.IdentityModel.Tokens;
 using Nasa.Common.Auth;
 using Nasa.DAL.Context;
 using System.Text;
+using Nasa.BLL.Services;
+using Nasa.BLL.Services.JWT;
+using Nasa.BLL.ServicesContracts;
 
 namespace Nasa.API.Extensions;
 
 public static class ServiceExtensions
 {
+    public static void AddCustomServices(this IServiceCollection services)
+    {
+        services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<JwtIssuerOptions>();
+        
+        services.AddScoped<UserStorageService>();
+        services.AddTransient<IUserIdGetter>(s => s.GetRequiredService<UserStorageService>());
+        services.AddTransient<IUserIdSetter>(s => s.GetRequiredService<UserStorageService>());
+
+        services.AddScoped<ISubscribeService, SubscribeService>();
+    }
     public static void AddNasaContext(this IServiceCollection services, IConfiguration configuration)
     {
         var squirrelCoreDbConnectionString = "NasaConnectionString";

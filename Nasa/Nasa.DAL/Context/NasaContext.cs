@@ -10,6 +10,5 @@ public class NasaContext: DbContext
     }
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Settlement> Settlements { get; set; }
     public DbSet<Subscription> Subscriptions { get; set; }
 }

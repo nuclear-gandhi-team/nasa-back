@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using Nasa.BLL.ServicesContracts;
 using Nasa.Common.Auth;
 using Nasa.Common.DTO.User;
 using Nasa.DAL.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace Nasa.BLL.Services.JWT
 {
