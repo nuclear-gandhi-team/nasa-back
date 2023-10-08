@@ -21,44 +21,6 @@ namespace Nasa.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Nasa.DAL.Entities.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("Nasa.DAL.Entities.Settlement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Сoordinates")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settlements");
-                });
-
             modelBuilder.Entity("Nasa.DAL.Entities.Subscription", b =>
                 {
                     b.Property<int>("Id")
@@ -67,15 +29,14 @@ namespace Nasa.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
+                    b.Property<string>("Coordinates")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SettlementId");
 
                     b.HasIndex("UserId");
 
@@ -98,12 +59,14 @@ namespace Nasa.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Salt")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
@@ -111,44 +74,22 @@ namespace Nasa.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Сoordinates")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Nasa.DAL.Entities.Subscription", b =>
                 {
-                    b.HasOne("Nasa.DAL.Entities.Settlement", "Settlement")
-                        .WithMany()
-                        .HasForeignKey("SettlementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Nasa.DAL.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Settlement");
-
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Nasa.DAL.Entities.User", b =>
-                {
-                    b.HasOne("Nasa.DAL.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
                 });
 #pragma warning restore 612, 618
         }
