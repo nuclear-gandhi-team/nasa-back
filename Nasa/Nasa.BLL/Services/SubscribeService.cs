@@ -24,7 +24,7 @@ public class SubscribeService : BaseService, ISubscribeService
     public async Task<List<SubscribeDto>> GetAllUserSubscription()
     {
         return _mapper.Map<List<SubscribeDto>>(await _context.Subscriptions
-            .Where(s => s.Id == _userIdGetter.GetCurrentUserId())
+            .Where(s => s.User.Id == _userIdGetter.GetCurrentUserId())
             .ToListAsync());
     }
 
