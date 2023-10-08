@@ -7,6 +7,8 @@ using System.Text;
 using Nasa.BLL.Services;
 using Nasa.BLL.Services.JWT;
 using Nasa.BLL.ServicesContracts;
+using Nasa.BLL.Services.CurrentFires;
+
 namespace Nasa.API.Extensions;
 
 public static class ServiceExtensions
@@ -16,6 +18,7 @@ public static class ServiceExtensions
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICurrentFiresService, CurrentFiresService>();
         services.AddScoped<JwtIssuerOptions>();
         
         services.AddScoped<UserStorageService>();

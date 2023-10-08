@@ -12,6 +12,7 @@ public static class ExceptionExtension
             NotFoundException => HttpStatusCode.NotFound,
             EmailAlreadyExistException => HttpStatusCode.BadRequest,
             WrongEmailOrPasswordException => HttpStatusCode.BadRequest,
+            CurrentFiresApiException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
     }
