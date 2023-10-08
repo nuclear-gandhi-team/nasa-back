@@ -1,9 +1,9 @@
-﻿using Nasa.Common.DTO.CurrentFire;
+﻿using Nasa.Common.DTO.Coordinates;
 
 namespace Nasa.BLL.ServicesContracts
 {
     public interface ICurrentFiresService
     {
-        Task<IEnumerable<CurrentFireDto>> GetCurrentFires(DateTime date, int numberDays);
+        Task<IEnumerable<CoordinatesDto>> GetCurrentFires(DateTime date, int numberDays);
     }
 }

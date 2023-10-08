@@ -3,7 +3,7 @@ using CsvHelper.Configuration;
 using Microsoft.Extensions.Configuration;
 using Nasa.BLL.Exceptions;
 using Nasa.BLL.ServicesContracts;
-using Nasa.Common.DTO.CurrentFire;
+using Nasa.Common.DTO.Coordinates;
 using System.Globalization;
 using System.Net.Http.Headers;
 using Nasa.BLL.Extensions;
@@ -22,13 +22,13 @@ namespace Nasa.BLL.Services.CurrentFires
             _configuration = configuration;
         }
 
-        public async Task<IEnumerable<CurrentFireDto>> GetCurrentFires(DateTime date, int numberDays)
+        public async Task<IEnumerable<CoordinatesDto>> GetCurrentFires(DateTime date, int numberDays)
         {
             string mapKey = _configuration.GetValue<string>("MapKey");
 
             var path = string.Join("/", API_PATH, mapKey, SOURCE_AND_AREA, numberDays.ToString(), date.ToString("yyyy-MM-dd"));
 
-            IEnumerable<CurrentFireDto> currentFires;
+            IEnumerable<CoordinatesDto> currentFires;
 
             using (var msg = new HttpRequestMessage(HttpMethod.Get, new Uri(path)))
             {
@@ -47,7 +47,7 @@ namespace Nasa.BLL.Services.CurrentFires
                         PrepareHeaderForMatch = (PrepareHeaderForMatchArgs args) => args.Header.FirstCharacterToUpper()
                     }))
                     {
-                        currentFires = futureoptionsreader.GetRecords<CurrentFireDto>().ToList();
+                        currentFires = futureoptionsreader.GetRecords<CoordinatesDto>().ToList();
                     }
                 }
             }
